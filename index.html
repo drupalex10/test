@@ -1,92 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fast / Cheap / Good</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-    }
-    .toggle {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-    }
-    .toggle input {
-      display: none;
-    }
-    .slider {
-      position: relative;
-      width: 50px;
-      height: 24px;
-      background: #ccc;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.3s;
-      margin-right: 10px;
-    }
-    .slider::before {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      left: 2px;
-      top: 2px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
-    input:checked + .slider {
-      background: #4caf50;
-    }
-    input:checked + .slider::before {
-      transform: translateX(26px);
-    }
-    label {
-      font-size: 16px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle label {
+            font-size: 18px;
+        }
+        .toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <h2>Pick Two: Fast, Cheap, Good</h2>
-  
-  <div class="toggle">
-    <input type="checkbox" id="fast">
-    <span class="slider"></span>
-    <label for="fast">Fast</label>
-  </div>
-  <div class="toggle">
-    <input type="checkbox" id="cheap">
-    <span class="slider"></span>
-    <label for="cheap">Cheap</label>
-  </div>
-  <div class="toggle">
-    <input type="checkbox" id="good">
-    <span class="slider"></span>
-    <label for="good">Good</label>
-  </div>
+    <div class="container">
+        <h2>Choose Two</h2>
+        <div class="toggle-group">
+            <div class="toggle">
+                <input type="checkbox" id="fast" name="fast">
+                <label for="fast">Fast</label>
+            </div>
+            <div class="toggle">
+                <input type="checkbox" id="cheap" name="cheap">
+                <label for="cheap">Cheap</label>
+            </div>
+            <div class="toggle">
+                <input type="checkbox" id="good" name="good">
+                <label for="good">Good</label>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    const fast = document.getElementById('fast');
-    const cheap = document.getElementById('cheap');
-    const good = document.getElementById('good');
+    <script>
+        const fast = document.getElementById('fast');
+        const cheap = document.getElementById('cheap');
+        const good = document.getElementById('good');
 
-    function enforceRule() {
-      if (fast.checked && cheap.checked) {
-        good.checked = false;
-      }
-      if (fast.checked && good.checked) {
-        cheap.checked = false;
-      }
-      if (cheap.checked && good.checked) {
-        fast.checked = false;
-      }
-    }
+        let selectionOrder = [];
 
-    [fast, cheap, good].forEach(toggle => {
-      toggle.addEventListener('change', enforceRule);
-    });
-  </script>
+        function updateToggles(checkbox) {
+            if (checkbox.checked) {
+                selectionOrder.push(checkbox.id);
+            } else {
+                selectionOrder = selectionOrder.filter(id => id !== checkbox.id);
+            }
+
+            if (fast.checked && cheap.checked && good.checked) {
+                const firstSelected = selectionOrder[0];
+                if (firstSelected === 'fast') {
+                    fast.checked = false;
+                } else if (firstSelected === 'cheap') {
+                    cheap.checked = false;
+                } else if (firstSelected === 'good') {
+                    good.checked = false;
+                }
+                selectionOrder.shift();
+            }
+        }
+
+        fast.addEventListener('change', () => updateToggles(fast));
+        cheap.addEventListener('change', () => updateToggles(cheap));
+        good.addEventListener('change', () => updateToggles(good));
+    </script>
 </body>
 </html>
