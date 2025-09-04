@@ -1,94 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toggle Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .toggle label {
-            font-size: 18px;
-        }
-        .toggle input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toggle Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      background-color: white;
+      padding: 20px 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    .toggle label {
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* Toggle switch style */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .switch input {
+      display: none;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider::before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #4caf50;
+    }
+    input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>What are your expectations?</h2>
-        <div class="toggle-group">
-            <div class="toggle">
-                <input type="checkbox" id="fast" name="fast">
-                <label for="fast">Fast</label>
-            </div>
-            <div class="toggle">
-                <input type="checkbox" id="cheap" name="cheap">
-                <label for="cheap">Cheap</label>
-            </div>
-            <div class="toggle">
-                <input type="checkbox" id="good" name="good">
-                <label for="good">Good</label>
-            </div>
-        </div>
+  <div class="container">
+    <h2>What are your expectations?</h2>
+    <div class="toggle-group">
+      <div class="toggle">
+        <label for="fast">Fast</label>
+        <label class="switch">
+          <input type="checkbox" id="fast">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle">
+        <label for="cheap">Cheap</label>
+        <label class="switch">
+          <input type="checkbox" id="cheap">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle">
+        <label for="good">Good</label>
+        <label class="switch">
+          <input type="checkbox" id="good">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const fast = document.getElementById('fast');
-        const cheap = document.getElementById('cheap');
-        const good = document.getElementById('good');
+  <script>
+    const fast = document.getElementById('fast');
+    const cheap = document.getElementById('cheap');
+    const good = document.getElementById('good');
 
-        let selectionOrder = [];
+    let selectionOrder = [];
 
-        function updateToggles(checkbox) {
-            if (checkbox.checked) {
-                selectionOrder.push(checkbox.id);
-            } else {
-                selectionOrder = selectionOrder.filter(id => id !== checkbox.id);
-            }
+    function updateToggles(checkbox) {
+      if (checkbox.checked) {
+        selectionOrder.push(checkbox.id);
+      } else {
+        selectionOrder = selectionOrder.filter(id => id !== checkbox.id);
+      }
 
-            if (fast.checked && cheap.checked && good.checked) {
-                const firstSelected = selectionOrder[0];
-                if (firstSelected === 'fast') {
-                    fast.checked = false;
-                } else if (firstSelected === 'cheap') {
-                    cheap.checked = false;
-                } else if (firstSelected === 'good') {
-                    good.checked = false;
-                }
-                selectionOrder.shift();
-            }
-        }
+      if (fast.checked && cheap.checked && good.checked) {
+        const firstSelected = selectionOrder[0];
+        if (firstSelected === 'fast') fast.checked = false;
+        else if (firstSelected === 'cheap') cheap.checked = false;
+        else if (firstSelected === 'good') good.checked = false;
+        selectionOrder.shift();
+      }
+    }
 
-        fast.addEventListener('change', () => updateToggles(fast));
-        cheap.addEventListener('change', () => updateToggles(cheap));
-        good.addEventListener('change', () => updateToggles(good));
-    </script>
+    [fast, cheap, good].forEach(toggle => {
+      toggle.addEventListener('change', () => updateToggles(toggle));
+    });
+  </script>
 </body>
 </html>
